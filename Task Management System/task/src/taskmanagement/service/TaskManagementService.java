@@ -25,14 +25,14 @@ public class TaskManagementService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserProfile user = userRepository
-                .findAppUserByUsername(username.toLowerCase())
+                .findUserProfileByUsername(username.toLowerCase())
                 .orElseThrow(() -> new UsernameNotFoundException("Not found"));
 
         return new SecurityUser(user);
     }
 
     public ResponseEntity<?> addAccount(UserProfile user){
-        if(userRepository.findAppUserByUsername(user.getUsername()).isPresent()){
+        if(userRepository.findUserProfileByUsername(user.getUsername()).isPresent()){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
         }else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));

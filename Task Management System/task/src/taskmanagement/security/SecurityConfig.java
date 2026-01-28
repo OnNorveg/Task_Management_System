@@ -3,6 +3,7 @@ package taskmanagement.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -29,7 +30,8 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll() // expose the /error endpoint
                         .requestMatchers("/actuator/shutdown").permitAll() // required for tests
                         .requestMatchers("/h2-console/**").permitAll() // expose H2 console
-                        .requestMatchers("/api/accounts").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/accounts").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tasks").hasRole("USER")
                 )
                 .csrf(AbstractHttpConfigurer::disable) // allow modifying requests from tests
                 .sessionManagement(sessions ->

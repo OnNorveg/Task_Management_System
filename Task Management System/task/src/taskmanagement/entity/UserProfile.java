@@ -2,7 +2,8 @@ package taskmanagement.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
@@ -13,11 +14,12 @@ public class UserProfile {
 
     @Id
     @GeneratedValue
-    private int id;
-    @NotEmpty
+    private Long id;
+    @NotBlank
+    @Email
     private String email;
     private String username;
-    @NotEmpty
+    @NotBlank
     @Size(min = 6)
     private String password;
     @JsonIgnore
@@ -25,17 +27,15 @@ public class UserProfile {
 
     {
         this.roles = new ArrayList<>();
-        roles.add("USER");
-    }
+            roles.add("ROLE_USER");
+        }
 
-    public UserProfile(String email, String password) {
-        this.email = email.toLowerCase();
-        this.username = this.email;
-        this.password = password;
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -62,6 +62,7 @@ public class UserProfile {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email.toLowerCase();
+        this.username = this.email;
     }
 }

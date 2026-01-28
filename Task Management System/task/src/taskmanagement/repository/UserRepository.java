@@ -6,7 +6,6 @@ import taskmanagement.entity.UserProfile;
 
 import java.util.Optional;
 
-@Repository
-public interface UserRepository extends CrudRepository<UserProfile, Integer> {
-    Optional<UserProfile> findAppUserByUsername(String username);
+public interface UserRepository extends CrudRepository<UserProfile, Long> {
+    Optional<UserProfile> findUserProfileByUsername(String username);
 }
