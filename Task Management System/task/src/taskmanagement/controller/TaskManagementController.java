@@ -1,11 +1,9 @@
 package taskmanagement.controller;
 
 import jakarta.validation.Valid;
+import org.hibernate.annotations.Parameter;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import taskmanagement.entity.UserProfile;
 import taskmanagement.service.TaskManagementService;
 
@@ -23,8 +21,13 @@ public class TaskManagementController {
         return taskManagementService.addAccount(user);
     }
 
+    @PostMapping("/api/tasks")
+    ResponseEntity<?> SetTasks(@Valid @RequestBody TaskRequest taskRequest) {
+        return taskManagementService.createTask(taskRequest);
+    }
+
     @GetMapping("/api/tasks")
-    ResponseEntity<?> tasks() {
-        return ResponseEntity.ok().build();
+    ResponseEntity<?> GetTasks(@RequestParam(name = "author", required = false)  String author) {
+        return taskManagementService.getAllTasks(author);
     }
 }

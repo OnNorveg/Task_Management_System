@@ -30,8 +30,8 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll() // expose the /error endpoint
                         .requestMatchers("/actuator/shutdown").permitAll() // required for tests
                         .requestMatchers("/h2-console/**").permitAll() // expose H2 console
-                        .requestMatchers(HttpMethod.POST,"/api/accounts").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/tasks").hasRole("USER")
+                        .requestMatchers("/api/accounts").permitAll()
+                        .requestMatchers("/api/tasks").authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable) // allow modifying requests from tests
                 .sessionManagement(sessions ->
