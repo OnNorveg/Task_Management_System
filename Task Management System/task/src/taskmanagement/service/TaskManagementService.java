@@ -16,8 +16,7 @@ import taskmanagement.security.SecurityUser;
 import taskmanagement.entity.UserProfile;
 import taskmanagement.repository.UserRepository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TaskManagementService implements UserDetailsService {
@@ -61,11 +60,12 @@ public class TaskManagementService implements UserDetailsService {
     }
 
     public ResponseEntity<?> getAllTasks(String author){
-        Sort idSort = Sort.by("id");
-        if(author.isEmpty()){
+        Sort idSort = Sort.by("id").descending();
+        if(author == null){
             return new ResponseEntity<>(taskRepository.findAll(idSort), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(taskRepository.findByAuthor(author), HttpStatus.OK);
+
+            return new ResponseEntity<>(taskRepository.findByAuthorOrderByIdDesc(author), HttpStatus.OK);
         }
     }
 

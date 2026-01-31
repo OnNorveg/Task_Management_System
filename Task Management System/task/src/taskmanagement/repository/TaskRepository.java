@@ -4,8 +4,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import taskmanagement.entity.Task;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface TaskRepository extends PagingAndSortingRepository<Task, Long>, CrudRepository<Task, Long> {
-    Optional<Task> findByAuthor(String author);
+    List<Task> findByAuthorOrderByIdDesc(String author);
 }
