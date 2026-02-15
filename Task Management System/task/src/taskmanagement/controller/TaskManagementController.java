@@ -2,6 +2,7 @@ package taskmanagement.controller;
 
 import jakarta.validation.Valid;
 import org.hibernate.annotations.Parameter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +15,7 @@ import taskmanagement.service.TaskManagementService;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 
 @RestController
 public class TaskManagementController {
@@ -42,7 +44,7 @@ public class TaskManagementController {
     }
 
     @PostMapping("/api/auth/token")
-    String token(Authentication authentication) {
+    ResponseEntity<?> token(Authentication authentication) {
         var authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority);
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
@@ -52,6 +54,7 @@ public class TaskManagementController {
                 .claim("scope", authorities)
                 .build();
 
-        return jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
+        return new ResponseEntity<>(Map.of("token",
+                jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue()), HttpStatus.OK);
     }
 }
