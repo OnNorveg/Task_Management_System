@@ -19,9 +19,11 @@ public class Task {
     String description;
     String status;
     String author;
+    String assignee;
 
     {
         status = "CREATED";
+        assignee = "none";
     }
 
     public Long getId() {
@@ -68,4 +70,11 @@ public class Task {
         return id.toString();
     }
 
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
+    }
 }

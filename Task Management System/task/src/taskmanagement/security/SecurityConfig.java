@@ -52,7 +52,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, TaskOwnerAuthorizationManager taskOwner) throws Exception {
         return http
                 .httpBasic(Customizer.withDefaults()) // enable basic HTTP authentication
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
@@ -63,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll() // expose H2 console
                         .requestMatchers("/api/accounts").permitAll()
                         .requestMatchers("/api/auth/token").authenticated()
+                        .requestMatchers("/api/tasks/{taskId}/assign").access(taskOwner)
                         .requestMatchers("/api/tasks").authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable) // allow modifying requests from tests

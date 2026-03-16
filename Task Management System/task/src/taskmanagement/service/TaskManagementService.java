@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import taskmanagement.controller.AssignRequest;
 import taskmanagement.controller.TaskRequest;
 import taskmanagement.entity.Task;
 import taskmanagement.repository.TaskRepository;
@@ -66,6 +67,17 @@ public class TaskManagementService implements UserDetailsService {
         } else {
 
             return new ResponseEntity<>(taskRepository.findByAuthorOrderByIdDesc(author), HttpStatus.OK);
+        }
+    }
+
+    public ResponseEntity<?> assignTask(AssignRequest assignRequest, Long taskId){
+        if(taskRepository.findById(taskId).isPresent() &&
+                userRepository.findUserProfileByUsername(assignRequest.getAssignee()).isPresent()){
+            Task task = taskRepository.findById(taskId).get();
+            task.setAssignee(assignRequest.getAssignee());
+            return new ResponseEntity<>(taskRepository.save(task), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

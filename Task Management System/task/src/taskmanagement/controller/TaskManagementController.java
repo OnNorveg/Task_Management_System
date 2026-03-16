@@ -57,4 +57,10 @@ public class TaskManagementController {
         return new ResponseEntity<>(Map.of("token",
                 jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue()), HttpStatus.OK);
     }
+
+    @PutMapping("/api/tasks/{taskId}/assign")
+    ResponseEntity<?> updateTask(@Valid @RequestBody AssignRequest assignRequest, @PathVariable("taskId") Long taskId) {
+        return taskManagementService.assignTask(assignRequest, taskId);
+    }
+
 }
