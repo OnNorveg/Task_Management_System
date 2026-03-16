@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import taskmanagement.controller.AssignRequest;
+import taskmanagement.controller.StatusRequest;
 import taskmanagement.controller.TaskRequest;
 import taskmanagement.entity.Task;
 import taskmanagement.repository.TaskRepository;
@@ -60,13 +61,18 @@ public class TaskManagementService implements UserDetailsService {
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getAllTasks(String author){
+    public ResponseEntity<?> getAllTasks(String author, String assignee){
         Sort idSort = Sort.by("id").descending();
-        if(author == null){
+        if(author == null && assignee == null){
             return new ResponseEntity<>(taskRepository.findAll(idSort), HttpStatus.OK);
         } else {
-
-            return new ResponseEntity<>(taskRepository.findByAuthorOrderByIdDesc(author), HttpStatus.OK);
+            if(author != null){
+                return new ResponseEntity<>(taskRepository.findByAuthorOrderByIdDesc(author), HttpStatus.OK);
+            } else if(assignee != null){
+                return new ResponseEntity<>(taskRepository.findByAssigneeOrderByIdDesc(assignee), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(taskRepository.findByAuthorAndAssigneeOrderByIdDesc(author, assignee), HttpStatus.OK);
+            }
         }
     }
 
@@ -77,6 +83,16 @@ public class TaskManagementService implements UserDetailsService {
             task.setAssignee(assignRequest.getAssignee());
             return new ResponseEntity<>(taskRepository.save(task), HttpStatus.OK);
         } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<?> assignStatus(StatusRequest statusRequest, Long taskId){
+        if(taskRepository.findById(taskId).isPresent()){
+            Task task = taskRepository.findById(taskId).get();
+            task.setStatus(statusRequest.getStatus());
+            return new ResponseEntity<>(taskRepository.save(task), HttpStatus.OK);
+        }  else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

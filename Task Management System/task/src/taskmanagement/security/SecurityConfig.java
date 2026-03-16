@@ -63,7 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll() // expose H2 console
                         .requestMatchers("/api/accounts").permitAll()
                         .requestMatchers("/api/auth/token").authenticated()
-                        .requestMatchers("/api/tasks/{taskId}/assign").access(taskOwner)
+                        .requestMatchers("/api/tasks/{taskId}/**").access(taskOwner)
                         .requestMatchers("/api/tasks").authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable) // allow modifying requests from tests

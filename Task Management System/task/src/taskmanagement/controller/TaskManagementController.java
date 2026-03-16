@@ -39,8 +39,9 @@ public class TaskManagementController {
     }
 
     @GetMapping("/api/tasks")
-    ResponseEntity<?> GetTasks(@RequestParam(name = "author", required = false)  String author) {
-        return taskManagementService.getAllTasks(author);
+    ResponseEntity<?> GetTasks(@RequestParam(name = "author", required = false)  String author,
+                               @RequestParam(name = "assignee", required = false) String assignee) {
+        return taskManagementService.getAllTasks(author, assignee);
     }
 
     @PostMapping("/api/auth/token")
@@ -61,6 +62,11 @@ public class TaskManagementController {
     @PutMapping("/api/tasks/{taskId}/assign")
     ResponseEntity<?> updateTask(@Valid @RequestBody AssignRequest assignRequest, @PathVariable("taskId") Long taskId) {
         return taskManagementService.assignTask(assignRequest, taskId);
+    }
+
+    @PutMapping("/api/tasks/{taskId}/status")
+    ResponseEntity updateStatus(@Valid @RequestBody StatusRequest statusRequest, @PathVariable("taskId") Long taskId) {
+        return taskManagementService.assignStatus(statusRequest, taskId);
     }
 
 }

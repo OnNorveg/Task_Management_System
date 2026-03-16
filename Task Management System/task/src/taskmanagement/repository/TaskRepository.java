@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface TaskRepository extends PagingAndSortingRepository<Task, Long>, CrudRepository<Task, Long> {
     List<Task> findByAuthorOrderByIdDesc(String author);
+    List<Task> findByAssigneeOrderByIdDesc(String assignee);
+    List<Task> findByAuthorAndAssigneeOrderByIdDesc(String author, String assignee);
 }

@@ -2,9 +2,7 @@ package taskmanagement.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Task {
@@ -17,12 +15,13 @@ public class Task {
     Long taskID;
     String title;
     String description;
-    String status;
+    @Enumerated(EnumType.STRING)
+    Status status;
     String author;
     String assignee;
 
     {
-        status = "CREATED";
+        status = Status.CREATED;
         assignee = "none";
     }
 
@@ -50,11 +49,11 @@ public class Task {
         this.description = description;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
