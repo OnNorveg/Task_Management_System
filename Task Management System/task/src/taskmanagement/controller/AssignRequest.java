@@ -17,6 +17,6 @@ public class AssignRequest {
         return assignee;
     }
     public void setAssignee(String assignee) {
-        this.assignee = assignee.toLowerCase();
+        this.assignee = assignee;
     }
 }

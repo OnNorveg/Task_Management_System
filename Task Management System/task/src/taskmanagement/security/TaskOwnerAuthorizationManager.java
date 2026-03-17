@@ -25,7 +25,8 @@ public class TaskOwnerAuthorizationManager implements AuthorizationManager<Reque
         String userName = authentication.get().getName();
         String taskId = context.getVariables().get("taskId");
         return taskRepository.findById(Long.valueOf(taskId))
-                .map(task -> new AuthorizationDecision(task.getAuthor().equals(userName)))
-                .orElse(new AuthorizationDecision(false));
+                .map(task -> new AuthorizationDecision(task.getAuthor().equals(userName)
+                || task.getAssignee().equals(userName)))
+                .orElse(new AuthorizationDecision(true));
     }
 }

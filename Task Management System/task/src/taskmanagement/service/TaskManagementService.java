@@ -66,19 +66,21 @@ public class TaskManagementService implements UserDetailsService {
         if(author == null && assignee == null){
             return new ResponseEntity<>(taskRepository.findAll(idSort), HttpStatus.OK);
         } else {
-            if(author != null){
-                return new ResponseEntity<>(taskRepository.findByAuthorOrderByIdDesc(author), HttpStatus.OK);
+            if(author != null && assignee != null){
+                return new ResponseEntity<>(taskRepository.findByAuthorAndAssigneeOrderByIdDesc(author, assignee), HttpStatus.OK);
             } else if(assignee != null){
                 return new ResponseEntity<>(taskRepository.findByAssigneeOrderByIdDesc(assignee), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(taskRepository.findByAuthorAndAssigneeOrderByIdDesc(author, assignee), HttpStatus.OK);
+                return new ResponseEntity<>(taskRepository.findByAuthorOrderByIdDesc(author), HttpStatus.OK);
             }
         }
     }
 
     public ResponseEntity<?> assignTask(AssignRequest assignRequest, Long taskId){
-        if(taskRepository.findById(taskId).isPresent() &&
-                userRepository.findUserProfileByUsername(assignRequest.getAssignee()).isPresent()){
+
+        if(taskRepository.findById(taskId).isPresent()
+                &&(userRepository.findUserProfileByUsername(assignRequest.getAssignee()).isPresent()
+                || assignRequest.getAssignee().equals("none"))){
             Task task = taskRepository.findById(taskId).get();
             task.setAssignee(assignRequest.getAssignee());
             return new ResponseEntity<>(taskRepository.save(task), HttpStatus.OK);
