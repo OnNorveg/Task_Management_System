@@ -59,6 +59,11 @@ public class TaskManagementController {
                 jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue()), HttpStatus.OK);
     }
 
+    @PostMapping("/api/tasks/{taskId}/comments")
+    ResponseEntity<?> postComment(@Valid @RequestBody CommentRequest commentRequest, @PathVariable("taskId") Long taskId) {
+        return addComment(commentRequest, taskId);
+    }
+
     @PutMapping("/api/tasks/{taskId}/assign")
     ResponseEntity<?> updateTask(@Valid @RequestBody AssignRequest assignRequest, @PathVariable("taskId") Long taskId) {
         return taskManagementService.assignTask(assignRequest, taskId);

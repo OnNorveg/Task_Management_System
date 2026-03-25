@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import taskmanagement.controller.AssignRequest;
+import taskmanagement.controller.CommentRequest;
 import taskmanagement.controller.StatusRequest;
 import taskmanagement.controller.TaskRequest;
 import taskmanagement.entity.Task;
@@ -97,6 +99,10 @@ public class TaskManagementService implements UserDetailsService {
         }  else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    public ResponseEntity<?> addComment(CommentRequest commentRequest, Long taskId) {
+
     }
 
 }
