@@ -4,21 +4,26 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 public class Task {
 
     @Id
     @JsonIgnore
     @GeneratedValue
-    Long id;
+    private Long id;
     @JsonProperty("id")
-    Long taskID;
-    String title;
-    String description;
+    private Long taskID;
+    private String title;
+    private String description;
     @Enumerated(EnumType.STRING)
-    Status status;
-    String author;
-    String assignee;
+    private Status status;
+    private String author;
+    private String assignee;
+    @OneToMany(mappedBy ="task", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Comment> comments;
+
 
     {
         status = Status.CREATED;
@@ -75,5 +80,14 @@ public class Task {
 
     public void setAssignee(String assignee) {
         this.assignee = assignee;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.setTask(this);
     }
 }
