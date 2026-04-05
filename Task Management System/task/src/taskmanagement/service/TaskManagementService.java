@@ -69,9 +69,9 @@ public class TaskManagementService implements UserDetailsService {
     }
 
     public ResponseEntity<?> getAllTasks(String author, String assignee){
-        Sort idSort = Sort.by("id").descending();
+        //Sort idSort = Sort.by("id").descending();
         if(author == null && assignee == null){
-            return new ResponseEntity<>(taskRepository.findAll(idSort), HttpStatus.OK);
+            return new ResponseEntity<>(taskRepository.findAllDto(), HttpStatus.OK);
         } else {
             if(author != null && assignee != null){
                 return new ResponseEntity<>(taskRepository.findByAuthorAndAssigneeOrderByIdDescDto(author, assignee), HttpStatus.OK);

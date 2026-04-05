@@ -1,11 +1,14 @@
 package taskmanagement.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public interface TaskDto {
-    public String getId();
-    public String getTitle();
-    public String getDescription();
-    public String getStatus();
-    public String getAuthor();
-    public String getAssignee();
-    public int getTotalComments();
+    String getId();
+    String getTitle();
+    String getDescription();
+    String getStatus();
+    String getAuthor();
+    String getAssignee();
+    @JsonProperty("total_comments")
+    int getTotalComments();
 }

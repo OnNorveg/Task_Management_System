@@ -1,5 +1,6 @@
 package taskmanagement.repository;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -14,27 +15,38 @@ public interface TaskRepository extends PagingAndSortingRepository<Task, Long>, 
     List<Task> findByAssigneeOrderByIdDesc(String assignee);
     List<Task> findByAuthorAndAssigneeOrderByIdDesc(String author, String assignee);
 
-    @Query("SELECT t.taskId as id, t.title as title, t.description as description, " +
+    @Query("SELECT t.Id as id, t.title as title, t.description as description, " +
             "t.status as status, t.author as author, t.assignee as assignee, " +
             "COUNT(c) as totalComments " +
             "FROM Task t LEFT JOIN t.comments c " +
             "WHERE t.author = :author " +
-            "GROUP BY t.taskId, t.title, t.description, t.status, t.author, t.assignee")
+            "GROUP BY t.Id, t.title, t.description, t.status, t.author, t.assignee " +
+            "ORDER BY t.Id DESC")
     List<TaskDto> findByAuthorOrderByIdDescDto(@Param("author") String author);
 
-    @Query("SELECT t.taskId as id, t.title as title, t.description as description, " +
+    @Query("SELECT t.Id as id, t.title as title, t.description as description, " +
             "t.status as status, t.author as author, t.assignee as assignee, " +
             "COUNT(c) as totalComments " +
             "FROM Task t LEFT JOIN t.comments c " +
             "WHERE t.assignee = :assignee " +
-            "GROUP BY t.taskId, t.title, t.description, t.status, t.author, t.assignee")
+            "GROUP BY t.Id, t.title, t.description, t.status, t.author, t.assignee " +
+            "ORDER BY t.Id DESC")
     List<TaskDto> findByAssigneeOrderByIdDescDto(@Param("assignee") String assignee);
 
-    @Query("SELECT t.taskId as id, t.title as title, t.description as description, " +
+    @Query("SELECT t.Id as id, t.title as title, t.description as description, " +
             "t.status as status, t.author as author, t.assignee as assignee, " +
             "COUNT(c) as totalComments " +
             "FROM Task t LEFT JOIN t.comments c " +
             "WHERE t.author = :author AND t.assignee = :assignee " +
-            "GROUP BY t.taskId, t.title, t.description, t.status, t.author, t.assignee")
+            "GROUP BY t.Id, t.title, t.description, t.status, t.author, t.assignee " +
+            "ORDER BY t.Id DESC")
     List<TaskDto> findByAuthorAndAssigneeOrderByIdDescDto(@Param("author") String author, @Param("assignee") String assignee);
+
+    @Query("SELECT t.Id as id, t.title as title, t.description as description, " +
+            "t.status as status, t.author as author, t.assignee as assignee, " +
+            "COUNT(c) as totalComments " +
+            "FROM Task t LEFT JOIN t.comments c " +
+            "GROUP BY t.Id, t.title, t.description, t.status, t.author, t.assignee " +
+            "ORDER BY t.Id DESC")
+    List<TaskDto> findAllDto();
 }
