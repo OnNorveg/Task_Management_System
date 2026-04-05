@@ -1,5 +1,7 @@
 package taskmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -11,6 +13,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task task;
@@ -24,6 +27,16 @@ public class Comment {
         task.getComments().add(this);
         this.text = text;
         this.author = SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    @JsonProperty("task_id")
+    public String getTaskId() {
+        return task.getTaskID().toString();
+    }
+
+    @JsonProperty("id")
+    public String getJsonId() {
+        return id != null ? id.toString() : null;
     }
 
     public Long getId() {

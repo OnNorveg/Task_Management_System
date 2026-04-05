@@ -8,5 +8,5 @@ import java.util.List;
 
 
 public interface CommentRepository extends CrudRepository<Comment, Long> {
-    List<Task> findByTaskOrderByIdDesc(Task task);
+    List<Comment> findByTask_IdOrderByIdDesc(Long taskId);
 }

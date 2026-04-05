@@ -23,7 +23,7 @@ public class Task {
     private String author;
     private String assignee;
     @JsonIgnore
-    @OneToMany(mappedBy ="task", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy ="task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<Comment> comments;
 
 

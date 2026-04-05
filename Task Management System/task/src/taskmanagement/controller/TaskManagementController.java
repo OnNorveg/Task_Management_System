@@ -45,7 +45,7 @@ public class TaskManagementController {
     }
 
     @GetMapping("/api/tasks/{taskId}/comments")
-    ResponseEntity<?> getTaskComments(@RequestParam(name = "taskId") Long taskId){
+    ResponseEntity<?> getTaskComments(@PathVariable("taskId") Long taskId){
         return taskManagementService.getAllTaskComments(taskId);
     }
 

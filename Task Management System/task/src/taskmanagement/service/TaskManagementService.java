@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import taskmanagement.controller.AssignRequest;
 import taskmanagement.controller.CommentRequest;
@@ -115,10 +116,10 @@ public class TaskManagementService implements UserDetailsService {
         }
     }
 
+    @Transactional
     public ResponseEntity<?> getAllTaskComments(Long taskId){
         if(taskRepository.findById(taskId).isPresent()){
-            Task task = taskRepository.findById(taskId).get();
-            return new ResponseEntity<>(commentRepository.findByTaskOrderByIdDesc(task), HttpStatus.OK);
+            return new ResponseEntity<>(commentRepository.findByTask_IdOrderByIdDesc(taskId), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
