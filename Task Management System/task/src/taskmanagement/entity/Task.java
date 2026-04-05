@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,12 +23,13 @@ public class Task {
     private String author;
     private String assignee;
     @OneToMany(mappedBy ="task", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Comment> comments;
+    private final Set<Comment> comments;
 
 
     {
         status = Status.CREATED;
         assignee = "none";
+        comments = new HashSet<>();
     }
 
     public Long getId() {
@@ -84,10 +86,5 @@ public class Task {
 
     public Set<Comment> getComments() {
         return comments;
-    }
-
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
-        comment.setTask(this);
     }
 }

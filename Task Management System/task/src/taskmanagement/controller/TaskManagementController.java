@@ -34,14 +34,19 @@ public class TaskManagementController {
     }
 
     @PostMapping("/api/tasks")
-    ResponseEntity<?> SetTasks(@Valid @RequestBody TaskRequest taskRequest) {
+    ResponseEntity<?> setTasks(@Valid @RequestBody TaskRequest taskRequest) {
         return taskManagementService.createTask(taskRequest);
     }
 
     @GetMapping("/api/tasks")
-    ResponseEntity<?> GetTasks(@RequestParam(name = "author", required = false)  String author,
+    ResponseEntity<?> getTasks(@RequestParam(name = "author", required = false)  String author,
                                @RequestParam(name = "assignee", required = false) String assignee) {
         return taskManagementService.getAllTasks(author, assignee);
+    }
+
+    @GetMapping("/api/tasks/{taskId}/comments")
+    ResponseEntity<?> getTaskComments(@RequestParam(name = "taskId") Long taskId){
+        return taskManagementService.getAllTaskComments(taskId);
     }
 
     @PostMapping("/api/auth/token")
@@ -61,7 +66,7 @@ public class TaskManagementController {
 
     @PostMapping("/api/tasks/{taskId}/comments")
     ResponseEntity<?> postComment(@Valid @RequestBody CommentRequest commentRequest, @PathVariable("taskId") Long taskId) {
-        return addComment(commentRequest, taskId);
+        return taskManagementService.addComment(commentRequest, taskId);
     }
 
     @PutMapping("/api/tasks/{taskId}/assign")
@@ -70,7 +75,7 @@ public class TaskManagementController {
     }
 
     @PutMapping("/api/tasks/{taskId}/status")
-    ResponseEntity updateStatus(@Valid @RequestBody StatusRequest statusRequest, @PathVariable("taskId") Long taskId) {
+    ResponseEntity<?> updateStatus(@Valid @RequestBody StatusRequest statusRequest, @PathVariable("taskId") Long taskId) {
         return taskManagementService.assignStatus(statusRequest, taskId);
     }
 

@@ -14,7 +14,9 @@ import taskmanagement.controller.AssignRequest;
 import taskmanagement.controller.CommentRequest;
 import taskmanagement.controller.StatusRequest;
 import taskmanagement.controller.TaskRequest;
+import taskmanagement.entity.Comment;
 import taskmanagement.entity.Task;
+import taskmanagement.repository.CommentRepository;
 import taskmanagement.repository.TaskRepository;
 import taskmanagement.security.SecurityUser;
 import taskmanagement.entity.UserProfile;
@@ -27,12 +29,15 @@ public class TaskManagementService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
+    private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public TaskManagementService(UserRepository userRepository, TaskRepository taskRepository, PasswordEncoder passwordEncoder) {
+    public TaskManagementService(UserRepository userRepository, TaskRepository taskRepository,
+                                 PasswordEncoder passwordEncoder,  CommentRepository commentRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.taskRepository = taskRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -69,11 +74,11 @@ public class TaskManagementService implements UserDetailsService {
             return new ResponseEntity<>(taskRepository.findAll(idSort), HttpStatus.OK);
         } else {
             if(author != null && assignee != null){
-                return new ResponseEntity<>(taskRepository.findByAuthorAndAssigneeOrderByIdDesc(author, assignee), HttpStatus.OK);
+                return new ResponseEntity<>(taskRepository.findByAuthorAndAssigneeOrderByIdDescDto(author, assignee), HttpStatus.OK);
             } else if(assignee != null){
-                return new ResponseEntity<>(taskRepository.findByAssigneeOrderByIdDesc(assignee), HttpStatus.OK);
+                return new ResponseEntity<>(taskRepository.findByAssigneeOrderByIdDescDto(assignee), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(taskRepository.findByAuthorOrderByIdDesc(author), HttpStatus.OK);
+                return new ResponseEntity<>(taskRepository.findByAuthorOrderByIdDescDto(author), HttpStatus.OK);
             }
         }
     }
@@ -102,7 +107,21 @@ public class TaskManagementService implements UserDetailsService {
     }
 
     public ResponseEntity<?> addComment(CommentRequest commentRequest, Long taskId) {
+        if(taskRepository.findById(taskId).isPresent()){
+            commentRepository.save(new Comment(taskRepository.findById(taskId).get(), commentRequest.text()));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
+    public ResponseEntity<?> getAllTaskComments(Long taskId){
+        if(taskRepository.findById(taskId).isPresent()){
+            Task task = taskRepository.findById(taskId).get();
+            return new ResponseEntity<>(commentRepository.findByTaskOrderByIdDesc(task), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }

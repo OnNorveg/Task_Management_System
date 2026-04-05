@@ -1,7 +1,11 @@
 package taskmanagement.entity;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Objects;
+
+@Entity
 public class Comment {
 
     @Id
@@ -15,10 +19,11 @@ public class Comment {
 
     public  Comment() {}
 
-    public Comment(Task task, String text, String author) {
+    public Comment(Task task, String text) {
         this.task = task;
+        task.getComments().add(this);
         this.text = text;
-        this.author = author;
+        this.author = SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     public Long getId() {
